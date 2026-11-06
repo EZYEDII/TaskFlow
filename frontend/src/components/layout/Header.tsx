@@ -1,5 +1,6 @@
 
-import { Bell, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 
 export default function Header() {
   return (
@@ -21,13 +22,7 @@ export default function Header() {
           </span>
         </div>
 
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="rounded-xl p-2 text-slate-500 hover:bg-slate-100"
-        >
-          <Bell size={20} />
-        </button>
+        <NotificationBell />
 
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600">
           TF

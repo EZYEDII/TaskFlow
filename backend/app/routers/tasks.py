@@ -1,9 +1,11 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
+from datetime import datetime, timezone
 
 from app.database import get_db
 from app.models.task import Task
+from app.models.notification import Notification
 from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
@@ -62,6 +64,7 @@ def update_task(
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
 
+    was_completed = task.completed
     update_data = task_update.model_dump(exclude_unset=True)
 
     if not update_data:
@@ -79,6 +82,18 @@ def update_task(
 
     for field, value in update_data.items():
         setattr(task, field, value)
+
+    if not was_completed and task.completed:
+        db.add(Notification(
+            task_id=task.id,
+            event_key=(
+              f"task:{task.id}:completed:"
+              f"{datetime.now(timezone.utc).isoformat()}"
+               ),
+            type="completed",
+            title="Task completed",
+            message=f"You completed: {task.title}"
+        ))
 
     db.commit()
     db.refresh(task)
