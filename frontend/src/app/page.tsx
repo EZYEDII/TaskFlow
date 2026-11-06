@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -20,7 +19,7 @@ import TaskModal from "@/features/tasks/components/TaskModal";
 
 import { useTasks } from "@/features/tasks/hooks/useTasks";
 
-import type { Task } from "@/features/tasks/types/task";
+import type { Task, TaskCreate } from "@/features/tasks/types/task";
 
 export default function DashboardPage() {
   const {
@@ -49,10 +48,7 @@ export default function DashboardPage() {
     setModalOpen(true);
   }
 
-  async function handleSubmit(data: {
-    title: string;
-    description?: string | null;
-  }) {
+  async function handleSubmit(data: TaskCreate) {
     const result = selectedTask
       ? await updateTask(selectedTask.id, data)
       : await createTask(data);

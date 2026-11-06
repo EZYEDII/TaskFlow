@@ -2,7 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import type { Task, TaskCreate } from "../types/task";
+import type {
+  Task,
+  TaskCreate,
+  TaskPriority,
+} from "../types/task";
 
 interface TaskModalProps {
   task: Task | null;
@@ -12,7 +16,12 @@ interface TaskModalProps {
 }
 
 export default function TaskModal(props: TaskModalProps) {
-  return <TaskModalContent key={props.task?.id ?? "new-task"} {...props} />;
+  return (
+    <TaskModalContent
+      key={props.task?.id ?? "new-task"}
+      {...props}
+    />
+  );
 }
 
 function TaskModalContent({
@@ -21,8 +30,16 @@ function TaskModalContent({
   onSubmit,
   isSubmitting,
 }: TaskModalProps) {
-  const [title, setTitle] = useState(() => task?.title ?? "");
-  const [description, setDescription] = useState(() => task?.description ?? "");
+  const [title, setTitle] = useState(task?.title ?? "");
+  const [description, setDescription] = useState(
+    task?.description ?? ""
+  );
+  const [priority, setPriority] = useState<TaskPriority>(
+    task?.priority ?? "medium"
+  );
+  const [dueDate, setDueDate] = useState(
+    task?.due_date ?? ""
+  );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,8 +49,13 @@ function TaskModalContent({
     await onSubmit({
       title: title.trim(),
       description: description.trim() || null,
+      priority,
+      due_date: dueDate || null,
     });
   }
+
+  const inputClass =
+    "w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-indigo-500";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -53,9 +75,10 @@ function TaskModalContent({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            maxLength={200}
+            minLength={3}
+            maxLength={100}
             placeholder="Enter task title"
-            className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-indigo-500"
+            className={inputClass}
           />
         </div>
 
@@ -66,9 +89,39 @@ function TaskModalContent({
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            maxLength={500}
             placeholder="Enter description"
             rows={3}
-            className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-indigo-500"
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium">
+            Priority
+          </label>
+          <select
+            value={priority}
+            onChange={(e) =>
+              setPriority(e.target.value as TaskPriority)
+            }
+            className={inputClass}
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium">
+            Due date
+          </label>
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className={inputClass}
           />
         </div>
 
@@ -83,7 +136,7 @@ function TaskModalContent({
 
           <button
             type="submit"
-            disabled={isSubmitting || !title.trim()}
+            disabled={isSubmitting || title.trim().length < 3}
             className="rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50"
           >
             {isSubmitting ? "Saving..." : "Save"}

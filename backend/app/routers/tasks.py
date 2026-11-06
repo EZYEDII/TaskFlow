@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
 
@@ -13,7 +14,9 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     new_task = Task(
         title=task.title,
         description=task.description,
-        completed=False
+        completed=False,
+        priority=task.priority,
+        due_date=task.due_date
     )
 
     db.add(new_task)
@@ -43,10 +46,7 @@ def get_task(task_id: int, db: Session = Depends(get_db)):
     task = db.query(Task).filter(Task.id == task_id).first()
 
     if task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found"
-        )
+        raise HTTPException(status_code=404, detail="Task not found")
 
     return task
 
@@ -60,24 +60,22 @@ def update_task(
     task = db.query(Task).filter(Task.id == task_id).first()
 
     if task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found"
-        )
+        raise HTTPException(status_code=404, detail="Task not found")
 
     update_data = task_update.model_dump(exclude_unset=True)
 
     if not update_data:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="No fields provided for update"
         )
 
-    if "title" in update_data and update_data["title"] is None:
-        raise HTTPException(status_code=422, detail="Title cannot be null")
-
-    if "completed" in update_data and update_data["completed"] is None:
-        raise HTTPException(status_code=422, detail="Completed cannot be null")
+    for field in ("title", "completed", "priority"):
+        if field in update_data and update_data[field] is None:
+            raise HTTPException(
+                status_code=422,
+                detail=f"{field} cannot be null"
+            )
 
     for field, value in update_data.items():
         setattr(task, field, value)
@@ -93,10 +91,7 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     task = db.query(Task).filter(Task.id == task_id).first()
 
     if task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found"
-        )
+        raise HTTPException(status_code=404, detail="Task not found")
 
     db.delete(task)
     db.commit()
