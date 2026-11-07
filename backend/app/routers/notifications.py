@@ -7,21 +7,32 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.task import Task
 from app.models.notification import Notification
+from app.models.user import User
 from app.schemas.notification import NotificationResponse
+from app.dependencies.auth import get_current_user
 
-router = APIRouter(prefix="/notifications", tags=["Notifications"])
+
+router = APIRouter(
+    prefix="/notifications",
+    tags=["Notifications"],
+)
 
 
-def generate_deadline_notifications(db: Session):
+def generate_deadline_notifications(
+    db: Session,
+    user_id: int,
+):
     today = date.today()
     upcoming_limit = today + timedelta(days=3)
 
     tasks = db.query(Task).filter(
+        Task.user_id == user_id,
         Task.completed.is_(False),
-        Task.due_date.isnot(None)
+        Task.due_date.isnot(None),
     ).all()
 
     for task in tasks:
+
         if task.due_date < today:
             notification_type = "overdue"
             title = "Task overdue"
@@ -45,27 +56,35 @@ def generate_deadline_notifications(db: Session):
         )
 
         exists = db.query(Notification.id).filter(
-            Notification.event_key == event_key
+            Notification.user_id == user_id,
+            Notification.event_key == event_key,
         ).first()
 
         if not exists:
-            db.add(Notification(
-                task_id=task.id,
-                event_key=event_key,
-                type=notification_type,
-                title=title,
-                message=message
-            ))
+            db.add(
+                Notification(
+                    user_id=user_id,
+                    task_id=task.id,
+                    event_key=event_key,
+                    type=notification_type,
+                    title=title,
+                    message=message,
+                )
+            )
 
     db.commit()
 
 
 @router.get("/", response_model=list[NotificationResponse])
-def get_notifications(db: Session = Depends(get_db)):
-    generate_deadline_notifications(db)
+def get_notifications(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    generate_deadline_notifications(db, current_user.id)
 
     return (
         db.query(Notification)
+        .filter(Notification.user_id == current_user.id)
         .order_by(Notification.created_at.desc())
         .limit(100)
         .all()
@@ -73,11 +92,15 @@ def get_notifications(db: Session = Depends(get_db)):
 
 
 @router.get("/unread-count")
-def get_unread_count(db: Session = Depends(get_db)):
-    generate_deadline_notifications(db)
+def get_unread_count(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    generate_deadline_notifications(db, current_user.id)
 
     count = db.query(Notification).filter(
-        Notification.is_read.is_(False)
+        Notification.user_id == current_user.id,
+        Notification.is_read.is_(False),
     ).count()
 
     return {"count": count}
@@ -86,16 +109,18 @@ def get_unread_count(db: Session = Depends(get_db)):
 @router.patch("/{notification_id}/read")
 def mark_as_read(
     notification_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     notification = db.query(Notification).filter(
-        Notification.id == notification_id
+        Notification.id == notification_id,
+        Notification.user_id == current_user.id,
     ).first()
 
     if notification is None:
         raise HTTPException(
             status_code=404,
-            detail="Notification not found"
+            detail="Notification not found",
         )
 
     notification.is_read = True
@@ -105,10 +130,17 @@ def mark_as_read(
 
 
 @router.patch("/read-all")
-def mark_all_as_read(db: Session = Depends(get_db)):
+def mark_all_as_read(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     db.query(Notification).filter(
-        Notification.is_read.is_(False)
-    ).update({"is_read": True})
+        Notification.user_id == current_user.id,
+        Notification.is_read.is_(False),
+    ).update(
+        {"is_read": True},
+        synchronize_session=False,
+    )
 
     db.commit()
 

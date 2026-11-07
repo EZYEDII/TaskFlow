@@ -1,7 +1,4 @@
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -9,20 +6,29 @@ export async function apiRequest<T>(
   let response: Response;
 
   try {
-    response = await fetch(`${API_URL}${endpoint}`, {
+    response = await fetch(`/api/backend${endpoint}`, {
       ...options,
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
       },
     });
   } catch {
-    throw new Error("Unable to connect to the server.");
+    throw new Error("Impossible de contacter le serveur.");
   }
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Error ${response.status}`);
+    let message = `Erreur ${response.status}`;
+
+    try {
+      const data = await response.json();
+      message = data.detail || message;
+    } catch {
+      // Keep the default error message.
+    }
+
+    throw new Error(message);
   }
 
   if (response.status === 204) {

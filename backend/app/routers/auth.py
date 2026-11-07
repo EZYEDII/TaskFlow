@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -18,21 +18,19 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/register", response_model=UserResponse, status_code=201)
-def register(data: UserCreate, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(
-        User.email == data.email
-    ).first()
+def register(
+    data: UserCreate,
+    db: Session = Depends(get_db),
+):
+    email = data.email.strip().lower()
 
-    if existing_user:
-        raise HTTPException(
-            status_code=409,
-            detail="Email already registered"
-        )
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(409, "Email already registered")
 
     user = User(
-        email=data.email,
-        full_name=data.full_name,
-        hashed_password=hash_password(data.password)
+        email=email,
+        full_name=data.full_name.strip(),
+        hashed_password=hash_password(data.password),
     )
 
     db.add(user)
@@ -45,32 +43,29 @@ def register(data: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=TokenResponse)
 def login(
     form: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    user = db.query(User).filter(
-        User.email == form.username
-    ).first()
+    email = form.username.strip().lower()
+
+    user = db.query(User).filter(User.email == email).first()
 
     if not user or not verify_password(
         form.password,
-        user.hashed_password
+        user.hashed_password,
     ):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
-        )
+        raise HTTPException(401, "Incorrect email or password")
 
     token = create_access_token({"sub": str(user.id)})
 
     return {
         "access_token": token,
         "token_type": "bearer",
-        "user": user
+        "user": user,
     }
 
 
 @router.get("/me", response_model=UserResponse)
 def get_profile(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     return current_user

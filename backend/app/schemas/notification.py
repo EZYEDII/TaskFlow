@@ -9,8 +9,12 @@ class NotificationResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    task_id: int | None
+    user_id: int
+    task_id: int | None = None
+
+    event_key: str
     type: Literal["overdue", "due_today", "upcoming", "completed"]
+
     title: str
     message: str
     is_read: bool
