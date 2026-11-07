@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.routers.tasks import router as tasks_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.notifications import router as notifications_router
+from app.routers.auth import router as auth_router
 
 app = FastAPI(
     title="TaskFlow API",
@@ -17,13 +18,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(tasks_router, prefix="/api/v1")
+
 app.include_router(
     notifications_router,
     prefix="/api/v1"
 )
 
-app.include_router(tasks_router, prefix="/api/v1")
-
+app.include_router(auth_router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():

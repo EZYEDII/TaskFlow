@@ -1,5 +1,6 @@
 
-from sqlalchemy import Column, Integer, String, Boolean, Date
+from sqlalchemy import Column, Integer, String, Boolean, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 
@@ -19,3 +20,11 @@ class Task(Base):
     )
 
     due_date = Column(Date, nullable=True)
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=True
+    )
+
+    owner = relationship("User", back_populates="tasks")
