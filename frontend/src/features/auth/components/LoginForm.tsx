@@ -22,7 +22,7 @@ export default function LoginForm() {
 
     try {
       await login(email.trim(), password);
-      router.replace("/tasks");
+      router.replace("/dashboard");
       router.refresh();
     } catch (err) {
       setError(
