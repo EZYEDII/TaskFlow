@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -10,6 +11,8 @@ import {
   LogOut,
   Zap,
 } from "lucide-react";
+
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -19,10 +22,29 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+
+    try {
+      await logout();
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white p-5">
-      <Link href="/" className="mb-10 flex items-center gap-3">
+      <Link href="/dashboard" className="mb-10 flex items-center gap-3">
         <div className="rounded-xl bg-indigo-600 p-2 text-white">
           <Zap size={23} />
         </div>
@@ -60,11 +82,12 @@ export default function Sidebar() {
       <div className="mt-auto border-t border-slate-100 pt-5">
         <button
           type="button"
-          disabled
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <LogOut size={19} />
-          Sign out
+          {isLoggingOut ? "Signing out..." : "Sign out"}
         </button>
       </div>
     </aside>
