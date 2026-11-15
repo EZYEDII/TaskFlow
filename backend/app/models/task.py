@@ -22,9 +22,10 @@ class Task(Base):
     due_date = Column(Date, nullable=True)
 
     user_id = Column(
-        Integer,
-        ForeignKey("users.id"),
-        nullable=True
-    )
+    Integer,
+    ForeignKey("users.id"),
+    nullable=False,
+    index=True
+)
 
     owner = relationship("User", back_populates="tasks")

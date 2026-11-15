@@ -30,11 +30,13 @@ def create_task(
     current_user: User = Depends(get_current_user),
 ):
     new_task = Task(
-        title=task.title,
-        description=task.description,
-        completed=False,
-        user_id=current_user.id,
-    )
+    title=task.title,
+    description=task.description,
+    completed=False,
+    priority=task.priority,
+    due_date=task.due_date,
+    user_id=current_user.id,
+)
 
     db.add(new_task)
     db.commit()
