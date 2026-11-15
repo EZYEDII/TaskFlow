@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from "next/server";
 
 const API_URL =
@@ -24,7 +23,9 @@ async function proxy(
   headers.set("Authorization", `Bearer ${token}`);
 
   const contentType = request.headers.get("content-type");
-  if (contentType) headers.set("Content-Type", contentType);
+  if (contentType) {
+    headers.set("Content-Type", contentType);
+  }
 
   try {
     const response = await fetch(url, {
@@ -37,9 +38,12 @@ async function proxy(
       cache: "no-store",
     });
 
-    const data = await response.arrayBuffer();
+    // Ne pas envoyer de body pour les réponses 204, 205 et 304.
+    const body = [204, 205, 304].includes(response.status)
+      ? null
+      : await response.arrayBuffer();
 
-    return new NextResponse(data, {
+    return new NextResponse(body, {
       status: response.status,
       headers: {
         "Content-Type":
