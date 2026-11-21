@@ -54,23 +54,24 @@ function TaskModalContent({
     });
   }
 
-  const inputClass =
-    "w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-indigo-500";
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="tf-modal-overlay">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 rounded-2xl bg-white p-6 shadow-xl"
+        className="tf-modal space-y-5"
       >
-        <h2 className="text-xl font-bold text-slate-900">
-          {task ? "Edit task" : "Create a task"}
-        </h2>
+        <div>
+          <h2 className="text-xl font-bold text-teal">
+            {task ? "Edit task" : "Create a task"}
+          </h2>
+
+          <p className="mt-1 text-sm tf-muted">
+            Organize your activities and priorities.
+          </p>
+        </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            Title
-          </label>
+          <label className="tf-label">Title</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -78,34 +79,30 @@ function TaskModalContent({
             minLength={3}
             maxLength={100}
             placeholder="Enter task title"
-            className={inputClass}
+            className="tf-input"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            Description
-          </label>
+          <label className="tf-label">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             maxLength={500}
             placeholder="Enter description"
             rows={3}
-            className={inputClass}
+            className="tf-input resize-none"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            Priority
-          </label>
+          <label className="tf-label">Priority</label>
           <select
             value={priority}
             onChange={(e) =>
               setPriority(e.target.value as TaskPriority)
             }
-            className={inputClass}
+            className="tf-input"
           >
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -114,22 +111,20 @@ function TaskModalContent({
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            Due date
-          </label>
+          <label className="tf-label">Due date</label>
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className={inputClass}
+            className="tf-input"
           />
         </div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-3 pt-2">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border px-4 py-2 text-slate-600"
+            className="tf-secondary"
           >
             Cancel
           </button>
@@ -137,7 +132,7 @@ function TaskModalContent({
           <button
             type="submit"
             disabled={isSubmitting || title.trim().length < 3}
-            className="rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50"
+            className="tf-primary"
           >
             {isSubmitting ? "Saving..." : "Save"}
           </button>

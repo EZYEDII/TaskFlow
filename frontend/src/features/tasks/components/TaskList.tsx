@@ -20,15 +20,24 @@ export default function TaskList({
   onDelete,
 }: TaskListProps) {
   if (loading) {
-    return <p className="py-6 text-center text-slate-500">
-      Loading tasks...
-    </p>;
+    return (
+      <p className="tf-empty">
+        Loading tasks...
+      </p>
+    );
   }
 
   if (tasks.length === 0) {
-    return <p className="py-6 text-center text-slate-500">
-      No tasks yet. Create your first task!
-    </p>;
+    return (
+      <div className="tf-card tf-empty">
+        <p className="font-semibold text-teal">
+          No tasks yet
+        </p>
+        <p className="mt-2 text-sm">
+          Create your first task and start organizing your work.
+        </p>
+      </div>
+    );
   }
 
   return (

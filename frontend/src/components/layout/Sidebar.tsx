@@ -43,51 +43,64 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white p-5">
-      <Link href="/dashboard" className="mb-10 flex items-center gap-3">
-        <div className="rounded-xl bg-indigo-600 p-2 text-white">
+    <aside className="tf-sidebar">
+      <Link
+        href="/dashboard"
+        className="mb-10 flex items-center gap-3 no-underline"
+      >
+        <div className="rounded-lg bg-white/10 p-2 text-white">
           <Zap size={23} />
         </div>
-        <span className="text-xl font-bold text-slate-900">
+
+        <span className="sidebar-brand-name text-xl font-bold text-white">
           TaskFlow
         </span>
       </Link>
 
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <p className="sidebar-section-label mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-white/60">
         Workspace
       </p>
 
       <nav className="space-y-2">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = pathname === item.href;
+
+          const active =
+            pathname === item.href ||
+            (item.href !== "/dashboard" &&
+              pathname.startsWith(`${item.href}/`));
 
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
-                active
-                  ? "bg-indigo-50 text-indigo-600"
-                  : "text-slate-600 hover:bg-slate-50"
+              aria-current={active ? "page" : undefined}
+              title={item.label}
+              className={`tf-sidebar-link ${
+                active ? "active" : ""
               }`}
             >
               <Icon size={19} />
-              {item.label}
+              <span className="sidebar-label">
+                {item.label}
+              </span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="mt-auto border-t border-slate-100 pt-5">
+      <div className="mt-auto border-t border-white/20 pt-5">
         <button
           type="button"
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+          title="Sign out"
+          className="tf-sidebar-link w-full"
         >
           <LogOut size={19} />
-          {isLoggingOut ? "Signing out..." : "Sign out"}
+          <span className="sidebar-label">
+            {isLoggingOut ? "Signing out..." : "Sign out"}
+          </span>
         </button>
       </div>
     </aside>

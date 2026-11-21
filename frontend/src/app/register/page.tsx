@@ -10,25 +10,37 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-12">
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
-        <Link
-          href="/"
-          className="text-2xl font-bold text-indigo-600"
-        >
+    <main className="auth-layout">
+      <section className="auth-brand-panel">
+        <Link href="/" className="auth-brand-logo text-white no-underline">
           TaskFlow.
         </Link>
 
-        <h1 className="mt-8 text-3xl font-bold text-slate-900">
-          Create your account
-        </h1>
+        <h2 className="auth-brand-title">
+          Your work.
+          <br />
+          Your progress.
+        </h2>
 
-        <p className="mb-8 mt-2 text-sm text-slate-500">
-          Start organizing your work with TaskFlow.
+        <p className="auth-brand-description">
+          Create your account and start organizing your
+          daily activities with TaskFlow.
         </p>
+      </section>
 
-        <RegisterForm />
-      </div>
+      <section className="auth-form-panel">
+        <div className="auth-form-container">
+          <h1 className="auth-form-title">
+            Create your account
+          </h1>
+
+          <p className="auth-form-description">
+            Start organizing your work with TaskFlow.
+          </p>
+
+          <RegisterForm />
+        </div>
+      </section>
     </main>
   );
 }

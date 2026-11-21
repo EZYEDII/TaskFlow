@@ -36,35 +36,31 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="mb-2 block text-sm font-medium">
-          Email
-        </label>
+        <label className="tf-label">Email</label>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@example.com"
-          className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-indigo-500"
+          className="tf-input"
         />
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-medium">
-          Password
-        </label>
+        <label className="tf-label">Password</label>
         <input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Your password"
-          className="w-full rounded-xl border border-slate-200 p-3 outline-none focus:border-indigo-500"
+          className="tf-input"
         />
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="tf-error">
           {error}
         </p>
       )}
@@ -72,14 +68,14 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-indigo-600 p-3 font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+        className="tf-primary w-full"
       >
         {loading ? "Signing in..." : "Sign in"}
       </button>
 
-      <p className="text-center text-sm text-slate-500">
+      <p className="text-center text-sm tf-muted">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-semibold text-indigo-600">
+        <Link href="/register" className="tf-link">
           Create account
         </Link>
       </p>

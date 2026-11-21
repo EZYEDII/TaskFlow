@@ -4,27 +4,29 @@ import NotificationBell from "@/features/notifications/components/NotificationBe
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-4">
+    <header className="tf-header">
       <div>
-        <h1 className="text-xl font-bold text-slate-900">
+        <h1 className="text-xl font-bold text-teal">
           Dashboard
         </h1>
-        <p className="text-sm text-slate-500">
+
+        <p className="mt-1 text-sm tf-muted">
           Manage your productivity in one place.
         </p>
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="hidden items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 sm:flex">
-          <Search size={17} className="text-slate-400" />
-          <span className="text-sm text-slate-400">
+        <div className="hidden items-center gap-2 rounded-lg border border-beige bg-white px-3 py-2 sm:flex">
+          <Search size={17} className="text-beige" />
+
+          <span className="text-sm tf-muted">
             Search tasks...
           </span>
         </div>
 
         <NotificationBell />
 
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal text-sm font-bold text-white">
           TF
         </div>
       </div>

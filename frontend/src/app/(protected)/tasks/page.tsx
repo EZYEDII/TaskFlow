@@ -46,24 +46,29 @@ export default function TasksPage() {
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [today, setToday] = useState("");
 
-const [today, setToday] = useState("");
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const now = new Date();
+      const localDate = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("-");
+      setToday(localDate);
+    }, 0);
 
-useEffect(() => {
-  const timer = window.setTimeout(() => {
-    setToday(new Date().toLocaleDateString("en-CA"));
-  }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
-  return () => window.clearTimeout(timer);
-}, []);
+  const filteredTasks = useMemo(() => {
+    const result = tasks.filter((task) => {
+      const query = search.trim().toLowerCase();
 
-const filteredTasks = useMemo(() => {
-  const result = tasks.filter((task) => {
-    const query = search.trim().toLowerCase();
-
-    const matchesSearch =
-      task.title.toLowerCase().includes(query) ||
-      (task.description ?? "").toLowerCase().includes(query);
+      const matchesSearch =
+        task.title.toLowerCase().includes(query) ||
+        (task.description ?? "").toLowerCase().includes(query);
 
       const matchesStatus =
         status === "all" ||
@@ -77,17 +82,13 @@ const filteredTasks = useMemo(() => {
 
       if (deadline === "overdue") {
         matchesDeadline =
-          !task.completed &&
-          !!task.due_date &&
-          task.due_date < today;
+          !task.completed && !!task.due_date && task.due_date < today;
       } else if (deadline === "today") {
         matchesDeadline =
           !task.completed && task.due_date === today;
       } else if (deadline === "upcoming") {
         matchesDeadline =
-          !task.completed &&
-          !!task.due_date &&
-          task.due_date > today;
+          !task.completed && !!task.due_date && task.due_date > today;
       } else if (deadline === "no_date") {
         matchesDeadline = !task.due_date;
       }
@@ -154,40 +155,37 @@ const filteredTasks = useMemo(() => {
     setSort("newest");
   }
 
-  const selectClass =
-    "rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-indigo-500";
+  const selectClass = "tf-input text-sm";
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="tf-page flex min-h-screen">
       <Sidebar />
 
       <main className="min-w-0 flex-1">
         <Header />
 
-        <div className="mx-auto max-w-7xl space-y-7 p-6 lg:p-8">
+        <div className="mx-auto max-w-7xl space-y-7 p-5 sm:p-6 lg:p-8">
 
-          {/* Page heading */}
           <section className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="tf-heading text-2xl font-bold">
                 My Tasks
               </h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm opacity-75">
                 Search, organize and manage your activities.
               </p>
             </div>
 
             <button
               onClick={openCreate}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+              className="tf-button-primary flex items-center gap-2 px-5 py-3 text-sm font-semibold"
             >
               <Plus size={18} />
               New Task
             </button>
           </section>
 
-          {/* Statistics */}
-          <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Stat label="Total tasks" value={tasks.length} />
             <Stat
               label="Pending"
@@ -199,56 +197,37 @@ const filteredTasks = useMemo(() => {
             />
           </section>
 
-          {/* Search */}
-          <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="flex items-center gap-2 font-semibold text-slate-800">
-              <SlidersHorizontal size={18} />
+          <section className="tf-card space-y-5 p-5">
+            <div className="tf-heading flex items-center gap-2 font-semibold">
+              <SlidersHorizontal size={19} />
               Search and filters
             </div>
 
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3">
-              <Search size={18} className="text-slate-400" />
+            <div className="flex items-center gap-3 rounded-lg border border-(--color-beige) bg-white px-4 py-3">
+              <Search size={18} className="text-(--color-beige)" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by title or description..."
-                className="w-full text-sm outline-none"
+                className="w-full bg-transparent text-sm outline-none"
               />
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <select
-                value={status}
-                onChange={(e) =>
-                  setStatus(e.target.value as StatusFilter)
-                }
-                className={selectClass}
-              >
+              <select value={status} onChange={(e) => setStatus(e.target.value as StatusFilter)} className={selectClass}>
                 <option value="all">All statuses</option>
                 <option value="pending">Pending</option>
                 <option value="completed">Completed</option>
               </select>
 
-              <select
-                value={priority}
-                onChange={(e) =>
-                  setPriority(e.target.value as "all" | TaskPriority)
-                }
-                className={selectClass}
-              >
+              <select value={priority} onChange={(e) => setPriority(e.target.value as "all" | TaskPriority)} className={selectClass}>
                 <option value="all">All priorities</option>
                 <option value="high">High priority</option>
                 <option value="medium">Medium priority</option>
                 <option value="low">Low priority</option>
               </select>
 
-              <select
-                value={deadline}
-                onChange={(e) =>
-                  setDeadline(e.target.value as DeadlineFilter)
-                }
-                className={selectClass}
-              >
+              <select value={deadline} onChange={(e) => setDeadline(e.target.value as DeadlineFilter)} className={selectClass}>
                 <option value="all">All deadlines</option>
                 <option value="overdue">Overdue</option>
                 <option value="today">Due today</option>
@@ -256,52 +235,41 @@ const filteredTasks = useMemo(() => {
                 <option value="no_date">No due date</option>
               </select>
 
-              <select
-                value={sort}
-                onChange={(e) =>
-                  setSort(e.target.value as SortOption)
-                }
-                className={selectClass}
-              >
+              <select value={sort} onChange={(e) => setSort(e.target.value as SortOption)} className={selectClass}>
                 <option value="newest">Newest first</option>
                 <option value="due_date">Due date</option>
                 <option value="priority">Priority: High to Low</option>
               </select>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm opacity-75">
                 Showing {filteredTasks.length} of {tasks.length} tasks
               </p>
 
               <button
                 onClick={resetFilters}
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                className="tf-button-secondary px-4 py-2 text-sm font-medium"
               >
                 Reset filters
               </button>
             </div>
           </section>
 
-          {/* Task list */}
           <section className="space-y-4">
-            <h3 className="font-semibold text-slate-900">
-              Tasks
-            </h3>
+            <h3 className="tf-heading font-semibold">Tasks</h3>
 
             {error && (
-              <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+              <p role="alert" className="rounded-lg border border-(--color-error) p-3 text-sm tf-error">
                 {error}
               </p>
             )}
 
             {!loading && filteredTasks.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                <Search className="mx-auto mb-3 text-slate-400" size={30} />
-                <p className="font-medium text-slate-700">
-                  No tasks found
-                </p>
-                <p className="mt-1 text-sm text-slate-500">
+              <div className="tf-card border-dashed p-10 text-center">
+                <Search className="mx-auto mb-3 text-(--color-beige)" size={30} />
+                <p className="tf-heading font-semibold">No tasks found</p>
+                <p className="mt-1 text-sm opacity-75">
                   Try changing your search or filters.
                 </p>
               </div>
@@ -338,9 +306,9 @@ const filteredTasks = useMemo(() => {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5">
-      <p className="text-sm text-slate-500">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-slate-900">{value}</p>
+    <div className="tf-card p-5">
+      <p className="text-sm opacity-75">{label}</p>
+      <p className="tf-heading mt-2 text-3xl font-bold">{value}</p>
     </div>
   );
 }

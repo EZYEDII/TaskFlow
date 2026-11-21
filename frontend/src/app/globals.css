@@ -1,26 +1,374 @@
+﻿
 @import "tailwindcss";
 
+/* =========================================
+   TASKFLOW — 60 / 30 / 10 COLOR SYSTEM
+========================================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --tf-cream: #F8F6F2;
+  --tf-teal: #245B59;
+  --tf-plum: #79536D;
+  --tf-beige: #E7DED2;
+
+  --background: var(--tf-cream);
+  --foreground: #263238;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-cream: var(--tf-cream);
+  --color-teal: var(--tf-teal);
+  --color-plum: var(--tf-plum);
+  --color-beige: var(--tf-beige);
+
+  --color-error: #DC5656;
+  --color-success: #27966B;
+  --color-warning: #D99A35;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =========================================
+   GLOBAL
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--tf-cream);
+  color: var(--tf-foreground);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+/* =========================================
+   SIDEBAR — TEAL
+========================================= */
+
+.tf-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  min-height: 100vh;
+  flex-shrink: 0;
+  padding: 28px 20px;
+  background: var(--tf-teal);
+  color: white;
+}
+
+.tf-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tf-sidebar-link:hover,
+.tf-sidebar-link.active {
+  background: rgba(255, 255, 255, 0.16);
+  color: white;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.tf-header {
+  display: flex;
+  min-height: 88px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 32px;
+  background: white;
+  border-bottom: 1px solid var(--tf-beige);
+}
+
+/* =========================================
+   DASHBOARD CARDS
+========================================= */
+
+.tf-card {
+  padding: 24px;
+  border: 1px solid var(--tf-beige);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 3px 12px rgba(38, 50, 56, 0.045);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.tf-card:hover {
+  box-shadow: 0 6px 18px rgba(38, 50, 56, 0.07);
+}
+
+.tf-card-title {
+  color: var(--tf-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tf-card-value {
+  margin-top: 18px;
+  color: var(--tf-teal);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+
+.tf-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--tf-plum);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tf-primary:hover {
+  background: #624158;
+}
+
+
+.tf-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================
+   TEXT
+========================================= */
+
+.tf-muted {
+  color: var(--tf-muted);
+}
+
+.tf-error {
+  padding: 14px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fef2f2;
+  color: var(--tf-error);
+  font-size: 14px;
+}
+
+/* =========================================
+   PLUM ACCENTS
+========================================= */
+
+.tf-accent {
+  color: var(--tf-plum);
+}
+
+.tf-accent-soft {
+  background: var(--tf-plum-light);
+  color: var(--tf-plum);
+  border: 1px solid rgba(161, 107, 145, 0.18);
+}
+
+.tf-accent-border {
+  border-color: var(--tf-plum);
+}
+
+/* =========================================
+   PROGRESS
+========================================= */
+
+.tf-progress-track {
+  width: 100%;
+  height: 11px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--tf-beige);
+}
+
+.tf-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tf-plum);
+  transition: width 0.4s ease;
+}
+
+/* =========================================
+   AUTHENTICATION
+========================================= */
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background: var(--tf-cream);
+}
+
+.auth-brand-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 70px;
+  background: var(--tf-cream);
+  color: var(--tf-teal);
+  border-right: 1px solid var(--tf-beige);
+}
+
+/* Plum decorative accent */
+
+.auth-brand-panel::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 15%;
+  width: 7px;
+  height: 70%;
+  border-radius: 8px 0 0 8px;
+  background: var(--tf-plum);
+}
+
+.auth-brand-logo {
+  margin-bottom: 80px;
+  color: var(--tf-teal);
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.auth-brand-title {
+  margin-bottom: 20px;
+  color: var(--tf-teal);
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.auth-brand-description {
+  max-width: 440px;
+  color: #64748B;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.auth-form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 45px 30px;
+  background: white;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 430px;
+  padding: 42px;
+  border: 1px solid var(--tf-beige);
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 8px 28px rgba(38, 50, 56, 0.055);
+}
+
+.auth-form-title {
+  margin-bottom: 12px;
+  color: var(--tf-teal);
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.auth-form-description {
+  margin-bottom: 32px;
+  color: var(--tf-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-brand-panel {
+    min-height: 300px;
+    padding: 35px;
+  }
+
+  .auth-brand-logo {
+    margin-bottom: 35px;
+  }
+
+  .auth-brand-title {
+    font-size: 36px;
+  }
+
+  .auth-form-panel {
+    padding: 40px 24px;
+  }
+
+  .auth-form-container {
+    padding: 28px 22px;
+  }
+
+  .tf-sidebar {
+    width: 76px;
+    padding: 20px 10px;
+  }
+
+  .tf-sidebar .sidebar-label,
+  .tf-sidebar .sidebar-brand-name,
+  .tf-sidebar .sidebar-section-label {
+    display: none;
+  }
+
+  .tf-sidebar-link {
+    justify-content: center;
+    padding: 13px 8px;
+  }
+
+  .tf-header {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-brand-panel {
+    min-height: 260px;
+  }
+
+  .auth-brand-title {
+    font-size: 30px;
+  }
+
+  .auth-form-title {
+    font-size: 27px;
+  }
 }

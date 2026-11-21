@@ -12,9 +12,9 @@ interface TaskItemProps {
 }
 
 const priorityStyles = {
-  high: "bg-red-50 text-red-600",
-  medium: "bg-orange-50 text-orange-600",
-  low: "bg-green-50 text-green-600",
+  high: "bg-[var(--color-error)]/10 text-[var(--color-error)]",
+  medium: "bg-[var(--color-warning)]/10 text-[var(--color-warning)]",
+  low: "bg-[var(--color-success)]/10 text-[var(--color-success)]",
 };
 
 function getLocalDate() {
@@ -45,17 +45,17 @@ export default function TaskItem({
     : null;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4">
-
+    <div className="tf-task">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <button
           type="button"
           onClick={() => onToggle(task)}
           aria-label="Toggle task completion"
+          aria-pressed={task.completed}
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
             task.completed
-              ? "border-indigo-600 bg-indigo-600 text-white"
-              : "border-slate-300"
+              ? "border-(--color-success) bg-(--color-success) text-white"
+              : "border-beige text-teal"
           }`}
         >
           {task.completed && <Check size={15} />}
@@ -64,38 +64,40 @@ export default function TaskItem({
         <div className="min-w-0">
           <p className={`font-medium ${
             task.completed
-              ? "text-slate-400 line-through"
-              : "text-slate-800"
+              ? "text-beige line-through"
+              : "text-text"
           }`}>
             {task.title}
           </p>
 
           {task.description && (
-            <p className="truncate text-sm text-slate-500">
+            <p className="truncate text-sm tf-muted">
               {task.description}
             </p>
           )}
 
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className={`rounded-md px-2 py-1 text-xs font-medium capitalize ${priorityStyles[task.priority]}`}>
+            <span
+              className={`rounded-md px-2 py-1 text-xs font-medium capitalize ${priorityStyles[task.priority]}`}
+            >
               {task.priority}
             </span>
 
             {formattedDate && (
-              <span className="flex items-center gap-1 text-xs text-slate-500">
+              <span className="flex items-center gap-1 text-xs tf-muted">
                 <CalendarDays size={13} />
                 {formattedDate}
               </span>
             )}
 
             {isOverdue && (
-              <span className="rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-600">
+              <span className="rounded-md bg-(--color-error)/10 px-2 py-1 text-xs font-medium text-(--color-error)">
                 Overdue
               </span>
             )}
 
             {isDueToday && (
-              <span className="rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-600">
+              <span className="rounded-md bg-(--color-warning)/10 px-2 py-1 text-xs font-medium text-(--color-warning)">
                 Due today
               </span>
             )}
@@ -108,7 +110,7 @@ export default function TaskItem({
           type="button"
           onClick={() => onEdit(task)}
           aria-label="Edit task"
-          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+          className="rounded-lg p-2 text-teal transition hover:bg-cream"
         >
           <Pencil size={17} />
         </button>
@@ -117,7 +119,7 @@ export default function TaskItem({
           type="button"
           onClick={() => onDelete(task.id)}
           aria-label="Delete task"
-          className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+          className="rounded-lg p-2 text-(--color-error) transition hover:bg-(--color-error)/10"
         >
           <Trash2 size={17} />
         </button>

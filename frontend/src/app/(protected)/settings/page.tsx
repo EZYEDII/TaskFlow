@@ -23,33 +23,45 @@ export default function SettingsPage() {
   const { settings, updateSettings, loaded } = useSettings();
 
   if (!loaded) {
-    return <div className="p-8">Loading settings...</div>;
+    return (
+      <div className="tf-page flex min-h-screen">
+        <Sidebar />
+        <main className="min-w-0 flex-1">
+          <Header />
+          <div className="p-8">
+            <p className="tf-heading">Loading settings...</p>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="tf-page flex min-h-screen">
       <Sidebar />
 
       <main className="min-w-0 flex-1">
         <Header />
 
-        <div className="mx-auto max-w-6xl space-y-7 p-6 lg:p-8">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+        <div className="mx-auto max-w-6xl space-y-7 p-5 sm:p-6 lg:p-8">
+          <section>
+            <h2 className="tf-heading text-2xl font-bold">
               Settings
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm opacity-75">
               Customize your TaskFlow experience.
             </p>
-          </div>
+          </section>
 
           <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
-            <SettingsSidebar
-              activeTab={activeTab}
-              onChange={setActiveTab}
-            />
+            <div className="tf-card h-fit p-3">
+              <SettingsSidebar
+                activeTab={activeTab}
+                onChange={setActiveTab}
+              />
+            </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-6">
+            <div className="tf-card min-w-0 p-5 sm:p-7">
               {activeTab === "profile" && (
                 <ProfileSettings
                   name={settings.name}

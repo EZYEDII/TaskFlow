@@ -5,26 +5,24 @@ interface StatCardProps {
   title: string;
   value: number;
   icon: LucideIcon;
-  color: string;
 }
 
 export default function StatCard({
   title,
   value,
   icon: Icon,
-  color,
 }: StatCardProps) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5">
+    <div className="tf-card">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">{title}</p>
+        <p className="tf-card-title">{title}</p>
 
-        <div className={`rounded-xl p-3 ${color}`}>
-          <Icon size={20} />
+        <div className="rounded-lg bg-cream p-3 text-teal">
+          <Icon size={21} />
         </div>
       </div>
 
-      <p className="mt-4 text-3xl font-bold text-slate-900">
+      <p className="tf-card-value">
         {value}
       </p>
     </div>
