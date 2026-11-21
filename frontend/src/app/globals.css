@@ -1,374 +1,369 @@
-﻿
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
-/* =========================================
-   TASKFLOW — 60 / 30 / 10 COLOR SYSTEM
-========================================= */
+/* =========================================================
+   TASKFLOW — CHARTE GRAPHIQUE 60 / 30 / 10
+   Seul fichier où les couleurs sont définies (hex).
+   Partout ailleurs : variables ou classes Tailwind (bg-teal…)
+   ========================================================= */
 
-:root {
-  color-scheme: light;
+@theme static {
+  /* 60 % — principale */
+  --color-cream: #FEFAF7;
+  /* 30 % — secondaire */
+  --color-teal: #154D57;
+  /* 10 % — accent */
+  --color-plum: #6B2D5C;
 
-  --tf-cream: #F8F6F2;
-  --tf-teal: #245B59;
-  --tf-plum: #79536D;
-  --tf-beige: #E7DED2;
+  /* complémentaires */
+  --color-beige: #B7A08B;
+  --color-text: #1F2A2E;
+  --color-white: #FFFFFF;
 
-  --background: var(--tf-cream);
-  --foreground: #263238;
+  /* états */
+  --color-success: #2E7D5B;
+  --color-error: #C0392B;
+  --color-warning: #D98A1F;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  --color-cream: var(--tf-cream);
-  --color-teal: var(--tf-teal);
-  --color-plum: var(--tf-plum);
-  --color-beige: var(--tf-beige);
-
-  --color-error: #DC5656;
-  --color-success: #27966B;
-  --color-warning: #D99A35;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans), system-ui, Arial, sans-serif;
+  /* Optionnel : charger une serif (ex. Playfair Display) dans layout.tsx
+     avec la variable --font-heading-serif */
+  --font-heading: var(--font-heading-serif), Georgia, "Times New Roman", serif;
 }
 
-/* =========================================
-   GLOBAL
-========================================= */
-
-* {
-  box-sizing: border-box;
+/* Dérivés (aucun nouveau hex) */
+:root {
+  color-scheme: light;
+  --color-muted: color-mix(in srgb, var(--color-text) 68%, transparent);
+  --color-teal-hover: color-mix(in srgb, var(--color-white) 12%, var(--color-teal));
+  --color-plum-hover: color-mix(in srgb, var(--color-text) 18%, var(--color-plum));
+  --color-halo: color-mix(in srgb, var(--color-teal) 18%, transparent);
 }
 
-html,
-body {
-  min-height: 100%;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: var(--tf-cream);
-  color: var(--tf-foreground);
-  font-family: var(--font-geist-sans), Arial, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-text);
+  font-family: var(--font-sans);
 }
 
-/* =========================================
-   SIDEBAR — TEAL
-========================================= */
+h1, h2, h3 { margin: 0; }
 
-.tf-sidebar {
-  display: flex;
-  flex-direction: column;
-  width: 250px;
-  min-height: 100vh;
-  flex-shrink: 0;
-  padding: 28px 20px;
-  background: var(--tf-teal);
-  color: white;
-}
+@layer components {
 
-.tf-sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  width: 100%;
-  padding: 13px 14px;
-  border-radius: 12px;
-  color: rgba(255, 255, 255, 0.82);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s;
-}
+  /* ---------- Texte ---------- */
+  .tf-muted { color: var(--color-muted); }
+  .tf-heading { font-family: var(--font-heading); color: var(--color-teal); font-weight: 700; }
 
-.tf-sidebar-link:hover,
-.tf-sidebar-link.active {
-  background: rgba(255, 255, 255, 0.16);
-  color: white;
-}
-
-/* =========================================
-   HEADER
-========================================= */
-
-.tf-header {
-  display: flex;
-  min-height: 88px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 18px 32px;
-  background: white;
-  border-bottom: 1px solid var(--tf-beige);
-}
-
-/* =========================================
-   DASHBOARD CARDS
-========================================= */
-
-.tf-card {
-  padding: 24px;
-  border: 1px solid var(--tf-beige);
-  border-radius: 18px;
-  background: white;
-  box-shadow: 0 3px 12px rgba(38, 50, 56, 0.045);
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-
-.tf-card:hover {
-  box-shadow: 0 6px 18px rgba(38, 50, 56, 0.07);
-}
-
-.tf-card-title {
-  color: var(--tf-muted);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.tf-card-value {
-  margin-top: 18px;
-  color: var(--tf-teal);
-  font-size: 30px;
-  font-weight: 700;
-}
-
-/* =========================================
-   BUTTONS
-========================================= */
-
-
-.tf-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 12px;
-  background: var(--tf-plum);
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.tf-primary:hover {
-  background: #624158;
-}
-
-
-.tf-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* =========================================
-   TEXT
-========================================= */
-
-.tf-muted {
-  color: var(--tf-muted);
-}
-
-.tf-error {
-  padding: 14px 16px;
-  border: 1px solid #fecaca;
-  border-radius: 12px;
-  background: #fef2f2;
-  color: var(--tf-error);
-  font-size: 14px;
-}
-
-/* =========================================
-   PLUM ACCENTS
-========================================= */
-
-.tf-accent {
-  color: var(--tf-plum);
-}
-
-.tf-accent-soft {
-  background: var(--tf-plum-light);
-  color: var(--tf-plum);
-  border: 1px solid rgba(161, 107, 145, 0.18);
-}
-
-.tf-accent-border {
-  border-color: var(--tf-plum);
-}
-
-/* =========================================
-   PROGRESS
-========================================= */
-
-.tf-progress-track {
-  width: 100%;
-  height: 11px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--tf-beige);
-}
-
-.tf-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: var(--tf-plum);
-  transition: width 0.4s ease;
-}
-
-/* =========================================
-   AUTHENTICATION
-========================================= */
-
-.auth-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 100vh;
-  background: var(--tf-cream);
-}
-
-.auth-brand-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 70px;
-  background: var(--tf-cream);
-  color: var(--tf-teal);
-  border-right: 1px solid var(--tf-beige);
-}
-
-/* Plum decorative accent */
-
-.auth-brand-panel::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 15%;
-  width: 7px;
-  height: 70%;
-  border-radius: 8px 0 0 8px;
-  background: var(--tf-plum);
-}
-
-.auth-brand-logo {
-  margin-bottom: 80px;
-  color: var(--tf-teal);
-  font-size: 27px;
-  font-weight: 800;
-}
-
-.auth-brand-title {
-  margin-bottom: 20px;
-  color: var(--tf-teal);
-  font-size: clamp(38px, 5vw, 58px);
-  line-height: 1.15;
-  font-weight: 800;
-}
-
-.auth-brand-description {
-  max-width: 440px;
-  color: #64748B;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-.auth-form-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 45px 30px;
-  background: white;
-}
-
-.auth-form-container {
-  width: 100%;
-  max-width: 430px;
-  padding: 42px;
-  border: 1px solid var(--tf-beige);
-  border-radius: 20px;
-  background: white;
-  box-shadow: 0 8px 28px rgba(38, 50, 56, 0.055);
-}
-
-.auth-form-title {
-  margin-bottom: 12px;
-  color: var(--tf-teal);
-  font-size: 32px;
-  font-weight: 800;
-}
-
-.auth-form-description {
-  margin-bottom: 32px;
-  color: var(--tf-muted);
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
-  .auth-layout {
-    grid-template-columns: 1fr;
+  .tf-link {
+    color: var(--color-teal);
+    font-weight: 600;
+    text-decoration: none;
   }
+  .tf-link:hover { text-decoration: underline; }
+
+  /* ---------- Boutons ---------- */
+  .tf-primary, .tf-secondary, .tf-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .tf-primary { background: var(--color-plum); color: var(--color-white); border: 1px solid var(--color-plum); }
+  .tf-primary:hover:not(:disabled) { background: var(--color-plum-hover); }
+
+  .tf-secondary { background: transparent; color: var(--color-teal); border: 1px solid var(--color-teal); }
+  .tf-secondary:hover:not(:disabled) { background: var(--color-halo); }
+
+  .tf-danger { background: var(--color-error); color: var(--color-white); border: 1px solid var(--color-error); }
+
+  .tf-primary:disabled, .tf-secondary:disabled, .tf-danger:disabled {
+    background: var(--color-beige);
+    border-color: var(--color-beige);
+    color: var(--color-white);
+    cursor: not-allowed;
+  }
+
+  /* ---------- Formulaires ---------- */
+  .tf-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .tf-input {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--color-beige);
+    border-radius: 8px;
+    background: var(--color-white);
+    color: var(--color-text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .tf-input::placeholder { color: var(--color-muted); }
+  .tf-input:focus {
+    border-color: var(--color-teal);
+    box-shadow: 0 0 0 3px var(--color-halo);
+  }
+  .tf-input[aria-invalid="true"] { border-color: var(--color-error); }
+
+  /* champ avec icône (login) */
+  .tf-field { position: relative; }
+  .tf-field > svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-beige);
+    pointer-events: none;
+  }
+  .tf-field > .tf-input { padding-left: 44px; }
+  .tf-field:focus-within > svg { color: var(--color-teal); }
+
+  .tf-field-error {
+    margin-top: 6px;
+    color: var(--color-error);
+    font-size: 13px;
+  }
+
+  /* ---------- Cartes ---------- */
+  .tf-card {
+    padding: 24px;
+    border: 1px solid var(--color-beige);
+    border-radius: 12px;
+    background: var(--color-white);
+  }
+  .tf-card-title { color: var(--color-text); opacity: .75; font-size: 14px; font-weight: 500; }
+  .tf-card-value { margin-top: 14px; color: var(--color-plum); font-size: 30px; font-weight: 700; line-height: 1; }
+
+  .tf-empty { padding: 32px; text-align: center; color: var(--color-muted); }
+
+  /* ---------- Progression ---------- */
+  .tf-progress-track { width: 100%; height: 10px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--color-beige) 30%, var(--color-white)); }
+  .tf-progress-fill { height: 100%; border-radius: 999px; background: var(--color-plum); transition: width .4s ease; }
+
+  /* ---------- Sidebar ---------- */
+  .tf-sidebar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 100vh;
+    flex-shrink: 0;
+    padding: 28px 18px;
+    background: var(--color-teal);
+    color: var(--color-white);
+  }
+  .tf-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-white);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .tf-sidebar-link:hover { background: var(--color-teal-hover); }
+  .tf-sidebar-link.active { background: var(--color-plum); }
+  .tf-sidebar-link:disabled { cursor: not-allowed; opacity: .7; }
+
+  /* ---------- Header ---------- */
+  .tf-header {
+    display: flex;
+    min-height: 80px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 32px;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-beige);
+  }
+
+  /* ---------- Tableaux ---------- */
+  .tf-table { width: 100%; border-collapse: collapse; border: 1px solid var(--color-beige); }
+  .tf-table th { background: var(--color-teal); color: var(--color-white); padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; }
+  .tf-table td { padding: 12px 16px; border-top: 1px solid var(--color-beige); font-size: 14px; }
+  .tf-table tbody tr:nth-child(odd) { background: var(--color-cream); }
+  .tf-table tbody tr:nth-child(even) { background: var(--color-white); }
+
+  /* ---------- Tâches ---------- */
+  .tf-task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    border: 1px solid var(--color-beige);
+    border-radius: 12px;
+    background: var(--color-white);
+  }
+
+  /* ---------- Modal ---------- */
+  .tf-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: color-mix(in srgb, var(--color-teal) 55%, transparent);
+  }
+  .tf-modal {
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    border: 1px solid var(--color-beige);
+    border-radius: 12px;
+    background: var(--color-white);
+  }
+
+  /* ---------- Alerte erreur ---------- */
+  .tf-error {
+    padding: 12px 14px;
+    border: 1px solid var(--color-error);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-error) 8%, var(--color-white));
+    color: var(--color-error);
+    font-size: 14px;
+  }
+
+  /* =====================================================
+     AUTHENTIFICATION — écran divisé 50 / 50
+     ===================================================== */
+  .auth-layout { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
 
   .auth-brand-panel {
-    min-height: 300px;
-    padding: 35px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 48px;
+    background: var(--color-teal);
+    color: var(--color-white);
   }
+  /* motifs discrets en beige */
+  .auth-brand-panel::before,
+  .auth-brand-panel::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-beige) 14%, transparent);
+    transform: rotate(-45deg);
+    pointer-events: none;
+  }
+  .auth-brand-panel::before { width: 460px; height: 96px; left: -140px; bottom: 60px; }
+  .auth-brand-panel::after  { width: 300px; height: 60px; right: -90px; top: 40px; }
 
   .auth-brand-logo {
-    margin-bottom: 35px;
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-white);
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
   }
 
-  .auth-brand-title {
-    font-size: 36px;
+  .auth-brand-content {
+    position: relative;
+    z-index: 1;
+    margin: auto;
+    max-width: 420px;
+    text-align: center;
   }
+  .auth-brand-title {
+    margin-bottom: 20px;
+    font-family: var(--font-heading);
+    font-size: clamp(34px, 4.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-white);
+  }
+  .auth-brand-description {
+    margin-bottom: 32px;
+    color: var(--color-white);
+    opacity: .85;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .auth-brand-cta {
+    display: inline-flex;
+    padding: 11px 32px;
+    border: 1px solid var(--color-white);
+    border-radius: 999px;
+    color: var(--color-white);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .auth-brand-cta:hover { background: var(--color-white); color: var(--color-teal); }
 
   .auth-form-panel {
-    padding: 40px 24px;
-  }
-
-  .auth-form-container {
-    padding: 28px 22px;
-  }
-
-  .tf-sidebar {
-    width: 76px;
-    padding: 20px 10px;
-  }
-
-  .tf-sidebar .sidebar-label,
-  .tf-sidebar .sidebar-brand-name,
-  .tf-sidebar .sidebar-section-label {
-    display: none;
-  }
-
-  .tf-sidebar-link {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    padding: 13px 8px;
+    padding: 40px 32px;
+    background: var(--color-cream);
   }
-
-  .tf-header {
-    padding: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .auth-brand-panel {
-    min-height: 260px;
-  }
-
-  .auth-brand-title {
-    font-size: 30px;
-  }
-
+  .auth-form-container { width: 100%; max-width: 400px; }
   .auth-form-title {
-    font-size: 27px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--color-teal);
+  }
+  .auth-form-description {
+    margin-bottom: 32px;
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .auth-layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .auth-brand-panel { padding: 20px 24px; }
+    .auth-brand-panel::before, .auth-brand-panel::after, .auth-brand-content { display: none; }
+    .auth-form-panel { align-items: flex-start; padding: 40px 24px; }
+    .auth-form-title { font-size: 32px; }
+
+    .tf-sidebar { width: 76px; padding: 20px 10px; }
+    .tf-sidebar .sidebar-label,
+    .tf-sidebar .sidebar-brand-name,
+    .tf-sidebar .sidebar-section-label { display: none; }
+    .tf-sidebar-link { justify-content: center; padding: 12px 8px; }
+    .tf-header { padding: 14px 16px; }
   }
 }

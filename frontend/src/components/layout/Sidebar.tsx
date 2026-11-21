@@ -1,16 +1,9 @@
-
 "use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  LayoutDashboard,
-  CheckSquare,
-  Settings,
-  LogOut,
-  Zap,
-} from "lucide-react";
+import { LayoutDashboard, CheckSquare, Settings, LogOut, Zap } from "lucide-react";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -24,14 +17,11 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
-
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
     if (isLoggingOut) return;
-
     setIsLoggingOut(true);
-
     try {
       await logout();
       router.replace("/login");
@@ -44,31 +34,23 @@ export default function Sidebar() {
 
   return (
     <aside className="tf-sidebar">
-      <Link
-        href="/dashboard"
-        className="mb-10 flex items-center gap-3 no-underline"
-      >
-        <div className="rounded-lg bg-white/10 p-2 text-white">
-          <Zap size={23} />
+      <Link href="/dashboard" className="mb-10 flex items-center gap-3 no-underline">
+        <div className="rounded-lg border border-white/30 p-2 text-white">
+          <Zap size={22} />
         </div>
-
-        <span className="sidebar-brand-name text-xl font-bold text-white">
-          TaskFlow
-        </span>
+        <span className="sidebar-brand-name text-xl font-bold text-white">TaskFlow</span>
       </Link>
 
-      <p className="sidebar-section-label mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-white/60">
+      <p className="sidebar-section-label mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-white/70">
         Workspace
       </p>
 
-      <nav className="space-y-2">
+      <nav className="space-y-1">
         {navItems.map((item) => {
           const Icon = item.icon;
-
           const active =
             pathname === item.href ||
-            (item.href !== "/dashboard" &&
-              pathname.startsWith(`${item.href}/`));
+            (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
 
           return (
             <Link
@@ -76,14 +58,10 @@ export default function Sidebar() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               title={item.label}
-              className={`tf-sidebar-link ${
-                active ? "active" : ""
-              }`}
+              className={`tf-sidebar-link ${active ? "active" : ""}`}
             >
               <Icon size={19} />
-              <span className="sidebar-label">
-                {item.label}
-              </span>
+              <span className="sidebar-label">{item.label}</span>
             </Link>
           );
         })}
@@ -95,7 +73,7 @@ export default function Sidebar() {
           onClick={handleLogout}
           disabled={isLoggingOut}
           title="Sign out"
-          className="tf-sidebar-link w-full"
+          className="tf-sidebar-link"
         >
           <LogOut size={19} />
           <span className="sidebar-label">

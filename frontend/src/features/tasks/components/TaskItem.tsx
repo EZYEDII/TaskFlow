@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { Task } from "../types/task";
@@ -12,33 +11,22 @@ interface TaskItemProps {
 }
 
 const priorityStyles = {
-  high: "bg-[var(--color-error)]/10 text-[var(--color-error)]",
-  medium: "bg-[var(--color-warning)]/10 text-[var(--color-warning)]",
-  low: "bg-[var(--color-success)]/10 text-[var(--color-success)]",
+  high: "bg-error/10 text-error",
+  medium: "bg-warning/10 text-warning",
+  low: "bg-success/10 text-success",
 };
 
 function getLocalDate() {
   const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${now.getFullYear()}-${m}-${d}`;
 }
 
-export default function TaskItem({
-  task,
-  onToggle,
-  onEdit,
-  onDelete,
-}: TaskItemProps) {
+export default function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
   const today = getLocalDate();
-
-  const isOverdue =
-    !task.completed && !!task.due_date && task.due_date < today;
-
-  const isDueToday =
-    !task.completed && task.due_date === today;
+  const isOverdue = !task.completed && !!task.due_date && task.due_date < today;
+  const isDueToday = !task.completed && task.due_date === today;
 
   const formattedDate = task.due_date
     ? new Date(`${task.due_date}T00:00:00`).toLocaleDateString()
@@ -54,32 +42,24 @@ export default function TaskItem({
           aria-pressed={task.completed}
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${
             task.completed
-              ? "border-(--color-success) bg-(--color-success) text-white"
-              : "border-beige text-teal"
+              ? "border-success bg-success text-white"
+              : "border-beige bg-white text-teal"
           }`}
         >
-          {task.completed && <Check size={15} />}
+          {task.completed && <Check size={14} />}
         </button>
 
         <div className="min-w-0">
-          <p className={`font-medium ${
-            task.completed
-              ? "text-beige line-through"
-              : "text-text"
-          }`}>
+          <p className={`font-medium ${task.completed ? "tf-muted line-through" : "text-text"}`}>
             {task.title}
           </p>
 
           {task.description && (
-            <p className="truncate text-sm tf-muted">
-              {task.description}
-            </p>
+            <p className="truncate text-sm tf-muted">{task.description}</p>
           )}
 
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span
-              className={`rounded-md px-2 py-1 text-xs font-medium capitalize ${priorityStyles[task.priority]}`}
-            >
+            <span className={`rounded-md px-2 py-1 text-xs font-medium capitalize ${priorityStyles[task.priority]}`}>
               {task.priority}
             </span>
 
@@ -91,21 +71,17 @@ export default function TaskItem({
             )}
 
             {isOverdue && (
-              <span className="rounded-md bg-(--color-error)/10 px-2 py-1 text-xs font-medium text-(--color-error)">
-                Overdue
-              </span>
+              <span className="rounded-md bg-error/10 px-2 py-1 text-xs font-medium text-error">Overdue</span>
             )}
 
             {isDueToday && (
-              <span className="rounded-md bg-(--color-warning)/10 px-2 py-1 text-xs font-medium text-(--color-warning)">
-                Due today
-              </span>
+              <span className="rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning">Due today</span>
             )}
           </div>
         </div>
       </div>
 
-      <div className="flex shrink-0 gap-2">
+      <div className="flex shrink-0 gap-1">
         <button
           type="button"
           onClick={() => onEdit(task)}
@@ -119,7 +95,7 @@ export default function TaskItem({
           type="button"
           onClick={() => onDelete(task.id)}
           aria-label="Delete task"
-          className="rounded-lg p-2 text-(--color-error) transition hover:bg-(--color-error)/10"
+          className="rounded-lg p-2 text-error transition hover:bg-error/10"
         >
           <Trash2 size={17} />
         </button>

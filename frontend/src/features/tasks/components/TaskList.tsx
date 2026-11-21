@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { Task } from "../types/task";
@@ -12,30 +11,16 @@ interface TaskListProps {
   onDelete: (id: number) => void;
 }
 
-export default function TaskList({
-  tasks,
-  loading,
-  onToggle,
-  onEdit,
-  onDelete,
-}: TaskListProps) {
+export default function TaskList({ tasks, loading, onToggle, onEdit, onDelete }: TaskListProps) {
   if (loading) {
-    return (
-      <p className="tf-empty">
-        Loading tasks...
-      </p>
-    );
+    return <p className="tf-empty">Loading tasks...</p>;
   }
 
   if (tasks.length === 0) {
     return (
       <div className="tf-card tf-empty">
-        <p className="font-semibold text-teal">
-          No tasks yet
-        </p>
-        <p className="mt-2 text-sm">
-          Create your first task and start organizing your work.
-        </p>
+        <p className="font-semibold text-teal">No tasks yet</p>
+        <p className="mt-2 text-sm">Create your first task and start organizing your work.</p>
       </div>
     );
   }
@@ -43,13 +28,7 @@ export default function TaskList({
   return (
     <div className="space-y-3">
       {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onToggle={onToggle}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
+        <TaskItem key={task.id} task={task} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   );
