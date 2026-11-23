@@ -1,96 +1,109 @@
-# TaskFlow — Full-Stack Task Management Application
+# TaskFlow Frontend
 
-TaskFlow is a full-stack task management application designed to help users organize their daily activities, manage priorities, and track their productivity.
+The frontend of **TaskFlow** is a modern, responsive task management interface built with Next.js, React, and TypeScript.
 
-The project demonstrates practical software engineering skills through REST API development, relational database management, authentication, frontend development, and containerization.
+It provides users with an intuitive interface to manage their accounts, organize tasks, monitor productivity, and track task completion through a personalized dashboard.
 
-Built with **FastAPI, PostgreSQL, SQLAlchemy, Alembic, Docker, Next.js, React, and TypeScript**.
+The frontend communicates with the backend REST API developed using FastAPI.
 
 ## Features
 
-### Backend
-- RESTful API built with FastAPI.
-- User authentication and account management.
-- Task management with complete CRUD operations.
-- PostgreSQL database integration.
-- SQLAlchemy ORM for database operations.
-- Pydantic request and response validation.
-- Pagination and task filtering.
-- Database migrations with Alembic.
-- Automated testing with Pytest.
-- Health check endpoint.
-
-### Frontend
-- Modern interface built with Next.js and React.
-- TypeScript for type safety.
-- User registration and login pages.
+### Authentication
+- User registration.
+- User login.
 - Authentication state management.
 - Protected application routes.
-- Responsive dashboard.
-- Task creation, editing, deletion, and completion.
-- Task statistics and progress tracking.
-- Notification interface.
-- Custom UI design based on a 60-30-10 color distribution.
-- Tailwind CSS and custom CSS styling.
+- Logout functionality.
+- Form validation and error handling.
 
-### Infrastructure
-- Docker and Docker Compose.
-- PostgreSQL containerization.
-- Environment-based configuration.
-- Database migrations.
-- Dedicated test database.
-- Git and GitHub version control.
+### Dashboard
+- Personalized dashboard interface.
+- Overview of total, completed, and pending tasks.
+- Task completion statistics.
+- Overall progress visualization.
+- Recent tasks overview.
+- Quick task creation.
+
+### Task Management
+- Create new tasks.
+- View existing tasks.
+- Edit task details.
+- Delete tasks.
+- Mark tasks as completed or pending.
+- Task status management.
+
+### Notifications
+- Notification interface.
+- Notification indicator.
+- Notification panel.
+
+### User Interface
+- Responsive application layout.
+- Sidebar navigation.
+- Dashboard header.
+- Reusable UI components.
+- Custom styling based on the 60-30-10 color distribution.
+- Consistent color palette and visual design.
+- Responsive layouts for different screen sizes.
 
 ## Tech Stack
 
 | Category | Technology |
 |---|---|
-| Backend | Python 3.11, FastAPI |
-| Frontend | Next.js, React, TypeScript |
-| Styling | Tailwind CSS 4, Custom CSS |
-| Database | PostgreSQL 17 |
-| ORM | SQLAlchemy |
-| Migrations | Alembic |
-| Validation | Pydantic |
-| Authentication | JWT / [specify implemented mechanism] |
-| Testing | Pytest, HTTPX |
-| Infrastructure | Docker, Docker Compose |
-| Version Control | Git, GitHub |
+| Framework | Next.js |
+| UI Library | React |
+| Programming Language | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Custom Styling | CSS |
+| Icons | Lucide React |
+| Backend Integration | FastAPI REST API |
+| Package Manager | npm |
 
 ## Project Structure
 
+The frontend follows a feature-oriented architecture to organize application pages, reusable components, and business logic.
+
 ```text
-TaskFlow/
-├── backend/
+frontend/
+├── public/
+│
+├── src/
 │   ├── app/
-│   │   ├── models/
-│   │   ├── routers/
-│   │   ├── schemas/
-│   │   ├── database.py
-│   │   └── main.py
-│   ├── migrations/
-│   │   └── versions/
-│   ├── Dockerfile
-│   └── requirements.txt
+│   │   ├── (protected)/
+│   │   │   ├── dashboard/
+│   │   │   ├── tasks/
+│   │   │   └── settings/
+│   │   │
+│   │   ├── login/
+│   │   ├── register/
+│   │   ├── globals.css
+│   │   └── layout.tsx
+│   │
+│   ├── components/
+│   │   └── layout/
+│   │       ├── Header.tsx
+│   │       └── Sidebar.tsx
+│   │
+│   └── features/
+│       ├── auth/
+│       │   ├── components/
+│       │   └── hooks/
+│       │
+│       ├── dashboard/
+│       │   └── components/
+│       │
+│       ├── notifications/
+│       │   └── components/
+│       │
+│       └── tasks/
+│           ├── components/
+│           ├── hooks/
+│           └── types/
 │
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   ├── features/
-│   │   └── ...
-│   ├── package.json
-│   └── ...
-│
-├── tests/
-│   ├── conftest.py
-│   └── test_tasks.py
-│
-├── .env.example
-├── .gitignore
-├── .dockerignore
-├── alembic.ini
-├── docker-compose.yml
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── next.config.ts
 └── README.md
 ```
 
@@ -100,157 +113,99 @@ TaskFlow/
 
 Make sure you have installed:
 
-- Python 3.11+
-- Node.js 20.9+
-- npm
-- Docker Desktop
-- Git
+- Node.js 20.9 or later.
+- npm.
+- Git.
 
-### 1. Clone the repository
+The FastAPI backend should also be running for full application functionality.
 
-```bash
-git clone YOUR_REPOSITORY_URL
-cd TaskFlow
-```
-
-### 2. Configure environment variables
-
-Create your local `.env` file using `.env.example` as a template.
-
-On Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-On Linux/macOS:
-
-```bash
-cp .env.example .env
-```
-
-Update the required database credentials, authentication settings, and application configuration.
-
-### 3. Start the backend and database
-
-```bash
-docker compose up -d --build
-```
-
-Docker Compose starts the PostgreSQL database and backend services according to the configured dependencies.
-
-### 4. Start the frontend
-
-Open a new terminal:
+### 1. Navigate to the frontend directory
 
 ```bash
 cd frontend
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
+```
+
+### 3. Configure environment variables
+
+Configure the backend API URL if required by the frontend configuration.
+
+Use the environment variable name expected by the API service in the project.
+
+### 4. Start the development server
+
+```bash
 npm run dev
 ```
 
-The frontend will be available at:
+### 5. Open the application
+
+Visit:
 
 http://localhost:3000
 
-### 5. Access the application
+## Application Pages
 
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:3000 |
-| Login | http://localhost:3000/login |
-| Registration | http://localhost:3000/register |
-| Dashboard | http://localhost:3000/dashboard |
-| Backend API | http://localhost:8000 |
-| Swagger Documentation | http://localhost:8000/docs |
-| Health Check | http://localhost:8000/health |
-
-## API Endpoints
-
-Base URL: `/api/v1`
-
-### Task Management
-
-| Method | Endpoint | Description |
+| Page | Route | Description |
 |---|---|---|
-| POST | `/tasks/` | Create a task |
-| GET | `/tasks/` | Retrieve tasks |
-| GET | `/tasks/{task_id}` | Retrieve a specific task |
-| PATCH | `/tasks/{task_id}` | Update a task |
-| DELETE | `/tasks/{task_id}` | Delete a task |
+| Login | `/login` | User authentication |
+| Registration | `/register` | Account creation |
+| Dashboard | `/dashboard` | Productivity overview |
+| Tasks | `/tasks` | Task management |
+| Settings | `/settings` | Application settings |
 
-### Filtering and Pagination
+## Backend Integration
 
-Examples:
+The frontend communicates with the FastAPI backend through REST API requests.
 
-```http
-GET /api/v1/tasks/?completed=true
-GET /api/v1/tasks/?completed=false
-GET /api/v1/tasks/?skip=0&limit=10
-```
+The integration supports:
 
-## Database Migrations
+- User authentication.
+- Account registration.
+- Task creation and retrieval.
+- Task updates and deletion.
+- Task completion management.
+- Backend error handling.
 
-Generate a new migration:
+The backend API documentation is available through Swagger UI:
 
-```bash
-alembic revision --autogenerate -m "migration description"
-```
+http://localhost:8000/docs
 
-Apply migrations:
+## Available Scripts
 
-```bash
-alembic upgrade head
-```
+| Command | Description |
+|---|---|
+| `npm install` | Install project dependencies |
+| `npm run dev` | Start the development server |
+| `npm run build` | Build the production application |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run the configured linting script |
 
-Check the current database revision:
+## Design System
 
-```bash
-alembic current
-```
+TaskFlow uses a custom visual identity based on the **60-30-10 color design principle**.
 
-## Testing
+The interface combines three complementary color groups:
 
-Install the testing dependencies if necessary:
+- **60% – Dominant color:** Cream and light neutral backgrounds.
+- **30% – Secondary color:** Teal elements for navigation and important interface sections.
+- **10% – Accent color:** Plum and complementary accent colors for highlights and visual emphasis.
 
-```bash
-python -m pip install pytest httpx
-```
-
-Run the test suite:
-
-```bash
-python -m pytest -v
-```
-
-The tests cover task management operations, validation, pagination, and filtering.
+The design aims to provide a clean, consistent, and comfortable user experience.
 
 ## Future Improvements
 
-Potential future enhancements include:
-
-- Advanced task filtering and search.
+- Advanced task search and filtering.
 - Enhanced notification functionality.
-- User profile management.
-- Improved dashboard analytics.
-- Continuous Integration and Continuous Deployment (CI/CD) with GitHub Actions.
-- Production deployment.
-
-## Learning Objectives
-
-TaskFlow demonstrates practical experience in:
-
-- Full-stack application development.
-- Python backend development.
-- REST API architecture.
-- Authentication and authorization.
-- Relational database design.
-- ORM and database migrations.
-- Frontend development with React and Next.js.
-- Responsive UI design.
-- Automated software testing.
-- Docker-based development environments.
-- Git and GitHub version control.
+- User profile customization.
+- Additional dashboard analytics.
+- Improved accessibility.
+- Frontend automated testing.
 
 ## Author
 
@@ -260,4 +215,4 @@ GitHub: [EZYEDII](https://github.com/EZYEDII)
 
 ---
 
-TaskFlow is an educational portfolio project developed to strengthen practical software engineering skills and demonstrate full-stack application development.
+The TaskFlow frontend is part of a full-stack educational portfolio project developed to demonstrate modern frontend development, backend integration, and practical software engineering skills.

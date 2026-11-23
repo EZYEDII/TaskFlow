@@ -1,35 +1,45 @@
 # TaskFlow — Full-Stack Task Management Application
 
-TaskFlow is a full-stack task management application designed to demonstrate modern backend development, REST API design, database management, containerization, and frontend integration.
+TaskFlow is a full-stack task management application designed to help users organize their daily activities, manage priorities, and track their productivity.
 
-The project is built with FastAPI, PostgreSQL, SQLAlchemy, Alembic, Docker, and Next.js.
+The project demonstrates practical software engineering skills through REST API development, relational database management, authentication, frontend development, and containerization.
 
-> **Project status:** Backend implemented. Frontend in development.
+Built with **FastAPI, PostgreSQL, SQLAlchemy, Alembic, Docker, Next.js, React, and TypeScript**.
 
 ## Features
 
 ### Backend
-- RESTful API built with FastAPI
-- Complete CRUD operations for tasks
-- PostgreSQL database integration
-- SQLAlchemy ORM
-- Pydantic request and response validation
-- Pagination and task filtering
-- Database migrations with Alembic
-- Automated tests with Pytest
-- Health check endpoint
-
-### Infrastructure
-- Docker and Docker Compose
-- Environment-based configuration
-- Separate test database
-- Reproducible development environment
+- RESTful API built with FastAPI.
+- User authentication and account management.
+- Task management with complete CRUD operations.
+- PostgreSQL database integration.
+- SQLAlchemy ORM for database operations.
+- Pydantic request and response validation.
+- Pagination and task filtering.
+- Database migrations with Alembic.
+- Automated testing with Pytest.
+- Health check endpoint.
 
 ### Frontend
-- Next.js and React
-- TypeScript
-- Tailwind CSS
-- Responsive dashboard (in development)
+- Modern interface built with Next.js and React.
+- TypeScript for type safety.
+- User registration and login pages.
+- Authentication state management.
+- Protected application routes.
+- Responsive dashboard.
+- Task creation, editing, deletion, and completion.
+- Task statistics and progress tracking.
+- Notification interface.
+- Custom UI design based on a 60-30-10 color distribution.
+- Tailwind CSS and custom CSS styling.
+
+### Infrastructure
+- Docker and Docker Compose.
+- PostgreSQL containerization.
+- Environment-based configuration.
+- Database migrations.
+- Dedicated test database.
+- Git and GitHub version control.
 
 ## Tech Stack
 
@@ -37,11 +47,12 @@ The project is built with FastAPI, PostgreSQL, SQLAlchemy, Alembic, Docker, and 
 |---|---|
 | Backend | Python 3.11, FastAPI |
 | Frontend | Next.js, React, TypeScript |
-| Styling | Tailwind CSS |
+| Styling | Tailwind CSS 4, Custom CSS |
 | Database | PostgreSQL 17 |
 | ORM | SQLAlchemy |
 | Migrations | Alembic |
 | Validation | Pydantic |
+| Authentication | JWT / [specify implemented mechanism] |
 | Testing | Pytest, HTTPX |
 | Infrastructure | Docker, Docker Compose |
 | Version Control | Git, GitHub |
@@ -61,10 +72,20 @@ TaskFlow/
 │   │   └── versions/
 │   ├── Dockerfile
 │   └── requirements.txt
+│
 ├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── features/
+│   │   └── ...
+│   ├── package.json
+│   └── ...
+│
 ├── tests/
 │   ├── conftest.py
 │   └── test_tasks.py
+│
 ├── .env.example
 ├── .gitignore
 ├── .dockerignore
@@ -77,8 +98,11 @@ TaskFlow/
 
 ### Prerequisites
 
+Make sure you have installed:
+
 - Python 3.11+
 - Node.js 20.9+
+- npm
 - Docker Desktop
 - Git
 
@@ -93,17 +117,19 @@ cd TaskFlow
 
 Create your local `.env` file using `.env.example` as a template.
 
-```bash
-cp .env.example .env
-```
-
 On Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Update the database credentials in `.env`.
+On Linux/macOS:
+
+```bash
+cp .env.example .env
+```
+
+Update the required database credentials, authentication settings, and application configuration.
 
 ### 3. Start the backend and database
 
@@ -111,23 +137,45 @@ Update the database credentials in `.env`.
 docker compose up -d --build
 ```
 
-Docker Compose starts PostgreSQL, waits for its health check, and starts the backend after applying Alembic migrations.
+Docker Compose starts the PostgreSQL database and backend services according to the configured dependencies.
 
-### 4. Access the API
+### 4. Start the frontend
 
-- API: http://localhost:8000
-- Swagger documentation: http://localhost:8000/docs
-- Health check: http://localhost:8000/health
+Open a new terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at:
+
+http://localhost:3000
+
+### 5. Access the application
+
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| Login | http://localhost:3000/login |
+| Registration | http://localhost:3000/register |
+| Dashboard | http://localhost:3000/dashboard |
+| Backend API | http://localhost:8000 |
+| Swagger Documentation | http://localhost:8000/docs |
+| Health Check | http://localhost:8000/health |
 
 ## API Endpoints
 
 Base URL: `/api/v1`
 
+### Task Management
+
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/tasks/` | Create a task |
 | GET | `/tasks/` | Retrieve tasks |
-| GET | `/tasks/{task_id}` | Retrieve a task |
+| GET | `/tasks/{task_id}` | Retrieve a specific task |
 | PATCH | `/tasks/{task_id}` | Update a task |
 | DELETE | `/tasks/{task_id}` | Delete a task |
 
@@ -143,7 +191,7 @@ GET /api/v1/tasks/?skip=0&limit=10
 
 ## Database Migrations
 
-Generate a migration:
+Generate a new migration:
 
 ```bash
 alembic revision --autogenerate -m "migration description"
@@ -155,7 +203,7 @@ Apply migrations:
 alembic upgrade head
 ```
 
-Check the current revision:
+Check the current database revision:
 
 ```bash
 alembic current
@@ -163,35 +211,46 @@ alembic current
 
 ## Testing
 
-Create the dedicated test database before running the tests.
+Install the testing dependencies if necessary:
 
 ```bash
 python -m pip install pytest httpx
+```
+
+Run the test suite:
+
+```bash
 python -m pytest -v
 ```
 
-The test suite covers task creation, retrieval, updating, deletion, validation, pagination, and filtering.
+The tests cover task management operations, validation, pagination, and filtering.
 
-## Development Goals
+## Future Improvements
 
-- Complete the responsive frontend dashboard
-- Integrate the frontend with the FastAPI backend
-- Improve automated test coverage
-- Add CI/CD with GitHub Actions
-- Deploy the complete application
+Potential future enhancements include:
+
+- Advanced task filtering and search.
+- Enhanced notification functionality.
+- User profile management.
+- Improved dashboard analytics.
+- Continuous Integration and Continuous Deployment (CI/CD) with GitHub Actions.
+- Production deployment.
 
 ## Learning Objectives
 
-This project is intended to demonstrate practical experience with:
+TaskFlow demonstrates practical experience in:
 
-- Python backend development
-- REST API architecture
-- Relational database design
-- ORM and database migrations
-- Automated testing
-- Containerization
-- Full-stack application development
-- Version control and collaborative development
+- Full-stack application development.
+- Python backend development.
+- REST API architecture.
+- Authentication and authorization.
+- Relational database design.
+- ORM and database migrations.
+- Frontend development with React and Next.js.
+- Responsive UI design.
+- Automated software testing.
+- Docker-based development environments.
+- Git and GitHub version control.
 
 ## Author
 
@@ -201,4 +260,4 @@ GitHub: [EZYEDII](https://github.com/EZYEDII)
 
 ---
 
-*TaskFlow is an educational portfolio project developed to strengthen practical software engineering skills.*
+TaskFlow is an educational portfolio project developed to strengthen practical software engineering skills and demonstrate full-stack application development.
